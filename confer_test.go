@@ -1,0 +1,159 @@
+package confer_test
+
+import (
+	"confer"
+	"os"
+
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
+)
+
+type TestStruct struct {
+	StringThing string `env:"string_thing"`
+
+	BoolThing bool `env:"bool_thing"`
+
+	IntThing    int    `env:"int_thing"`
+	Int8Thing   int8   `env:"int8_thing"`
+	Int16Thing  int16  `env:"int16_thing"`
+	Int32Thing  int32  `env:"int32_thing"`
+	Int64Thing  int64  `env:"int64_thing"`
+	UintThing   uint   `env:"uint_thing"`
+	Uint8Thing  uint8  `env:"uint8_thing"`
+	Uint16Thing uint16 `env:"uint16_thing"`
+	Uint32Thing uint32 `env:"uint32_thing"`
+	Uint64Thing uint64 `env:"uint64_thing"`
+}
+
+var _ = Describe("Confer", func() {
+	Describe("Load()", func() {
+		var (
+			ts        TestStruct
+			loadError error
+			envVars   map[string]string
+		)
+
+		BeforeEach(func() {
+			envVars = map[string]string{
+				"STRING_THING": "stringy thingy",
+				"BOOL_THING":   "true",
+				"INT_THING":    "100",
+				"INT8_THING":   "20",
+				"INT16_THING":  "2000",
+				"INT32_THING":  "200000",
+				"INT64_THING":  "200000000",
+				"UINT_THING":   "100",
+				"UINT8_THING":  "20",
+				"UINT16_THING": "2000",
+				"UINT32_THING": "200000",
+				"UINT64_THING": "200000000",
+			}
+		})
+
+		JustBeforeEach(func() {
+			for k, v := range envVars {
+				os.Setenv(k, v)
+			}
+
+			loadError = confer.Load(&ts)
+		})
+
+		AfterEach(func() {
+			for k := range envVars {
+				os.Setenv(k, "")
+			}
+		})
+
+		It("does not return an error", func() {
+			Expect(loadError).ToNot(HaveOccurred())
+		})
+
+		Context("with strings", func() {
+			It("populates the string thing", func() {
+				Expect(ts.StringThing).To(Equal("stringy thingy"))
+			})
+		})
+
+		Context("with bools", func() {
+			Context("with 'true'", func() {
+				It("is true", func() {
+					Expect(ts.BoolThing).To(BeTrue())
+				})
+			})
+
+			Context("with 'false'", func() {
+				BeforeEach(func() {
+					envVars["BOOL_THING"] = "false"
+				})
+
+				It("is true", func() {
+					Expect(ts.BoolThing).To(BeFalse())
+				})
+			})
+
+			Context("with '1'", func() {
+				BeforeEach(func() {
+					envVars["BOOL_THING"] = "1"
+				})
+
+				It("is true", func() {
+					Expect(ts.BoolThing).To(BeTrue())
+				})
+			})
+
+			Context("with '0'", func() {
+				BeforeEach(func() {
+					envVars["BOOL_THING"] = "0"
+				})
+
+				It("is false", func() {
+					Expect(ts.BoolThing).To(BeFalse())
+				})
+			})
+		})
+
+		Context("with ints", func() {
+			It("populates the int thing", func() {
+				Expect(ts.IntThing).To(Equal(100))
+			})
+
+			It("populates the int 8 thing", func() {
+				Expect(ts.Int8Thing).To(Equal(int8(20)))
+			})
+
+			It("populates the int 16 thing", func() {
+				Expect(ts.Int16Thing).To(Equal(int16(2000)))
+			})
+
+			It("populates the int 32 thing", func() {
+				Expect(ts.Int32Thing).To(Equal(int32(200000)))
+			})
+
+			It("populates the int 64 thing", func() {
+				Expect(ts.Int64Thing).To(Equal(int64(200000000)))
+			})
+		})
+
+		Context("with uints", func() {
+			It("populates the uint thing", func() {
+				Expect(ts.UintThing).To(Equal(uint(100)))
+			})
+
+			It("populates the uint 8 thing", func() {
+				Expect(ts.Uint8Thing).To(Equal(uint8(20)))
+			})
+
+			It("populates the uint 16 thing", func() {
+				Expect(ts.Uint16Thing).To(Equal(uint16(2000)))
+			})
+
+			It("populates the uint 32 thing", func() {
+				Expect(ts.Uint32Thing).To(Equal(uint32(200000)))
+			})
+
+			It("populates the uint 64 thing", func() {
+				Expect(ts.Uint64Thing).To(Equal(uint64(200000000)))
+			})
+		})
+	})
+})

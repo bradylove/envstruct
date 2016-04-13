@@ -23,6 +23,8 @@ type TestStruct struct {
 	Uint16Thing uint16 `env:"uint16_thing"`
 	Uint32Thing uint32 `env:"uint32_thing"`
 	Uint64Thing uint64 `env:"uint64_thing"`
+
+	StringSliceThing []string `env:"string_slice_thing"`
 }
 
 var _ = Describe("Confer", func() {
@@ -35,18 +37,19 @@ var _ = Describe("Confer", func() {
 
 		BeforeEach(func() {
 			envVars = map[string]string{
-				"STRING_THING": "stringy thingy",
-				"BOOL_THING":   "true",
-				"INT_THING":    "100",
-				"INT8_THING":   "20",
-				"INT16_THING":  "2000",
-				"INT32_THING":  "200000",
-				"INT64_THING":  "200000000",
-				"UINT_THING":   "100",
-				"UINT8_THING":  "20",
-				"UINT16_THING": "2000",
-				"UINT32_THING": "200000",
-				"UINT64_THING": "200000000",
+				"STRING_THING":       "stringy thingy",
+				"BOOL_THING":         "true",
+				"INT_THING":          "100",
+				"INT8_THING":         "20",
+				"INT16_THING":        "2000",
+				"INT32_THING":        "200000",
+				"INT64_THING":        "200000000",
+				"UINT_THING":         "100",
+				"UINT8_THING":        "20",
+				"UINT16_THING":       "2000",
+				"UINT32_THING":       "200000",
+				"UINT64_THING":       "200000000",
+				"STRING_SLICE_THING": "one,two,three",
 			}
 		})
 
@@ -153,6 +156,24 @@ var _ = Describe("Confer", func() {
 
 			It("populates the uint 64 thing", func() {
 				Expect(ts.Uint64Thing).To(Equal(uint64(200000000)))
+			})
+		})
+
+		Context("with comma separated strings", func() {
+			Context("with no spacing", func() {
+				It("populates a slice of strings", func() {
+					Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
+				})
+			})
+
+			Context("with leading and trailing spaces", func() {
+				BeforeEach(func() {
+					envVars["STRING_SLICE_THING"] = "one , two , three"
+				})
+
+				It("populates a slice of strings", func() {
+					Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
+				})
 			})
 		})
 	})

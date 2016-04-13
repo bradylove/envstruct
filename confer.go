@@ -30,6 +30,14 @@ func Load(t interface{}) error {
 			n, err := strconv.ParseUint(envVal, 10, 64)
 			_ = err
 			valueField.SetUint(uint64(n))
+		case reflect.Slice:
+			values := strings.Split(envVal, ",")
+
+			for i, v := range values {
+				values[i] = strings.TrimSpace(v)
+			}
+
+			valueField.Set(reflect.ValueOf(values))
 		}
 	}
 

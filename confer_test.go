@@ -25,6 +25,7 @@ type TestStruct struct {
 	Uint64Thing uint64 `env:"uint64_thing"`
 
 	StringSliceThing []string `env:"string_slice_thing"`
+	IntSliceThing    []int    `env:"string_slice_thing"`
 }
 
 var _ = Describe("Confer", func() {
@@ -50,6 +51,7 @@ var _ = Describe("Confer", func() {
 				"UINT32_THING":       "200000",
 				"UINT64_THING":       "200000000",
 				"STRING_SLICE_THING": "one,two,three",
+				"INT_SLICE_THING":    "1,2,3",
 			}
 		})
 
@@ -160,19 +162,25 @@ var _ = Describe("Confer", func() {
 		})
 
 		Context("with comma separated strings", func() {
-			Context("with no spacing", func() {
+			Context("slice of strings", func() {
 				It("populates a slice of strings", func() {
 					Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
+				})
+
+				Context("with leading and trailing spaces", func() {
+					BeforeEach(func() {
+						envVars["STRING_SLICE_THING"] = "one , two , three"
+					})
+
+					It("populates a slice of strings", func() {
+						Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
+					})
 				})
 			})
 
-			Context("with leading and trailing spaces", func() {
-				BeforeEach(func() {
-					envVars["STRING_SLICE_THING"] = "one , two , three"
-				})
-
-				It("populates a slice of strings", func() {
-					Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
+			Context("slice of ints", func() {
+				It("populates a slice of ints", func() {
+					Expect(ts.IntSliceThing).To(Equal([]int{1, 2, 3}))
 				})
 			})
 		})

@@ -37,7 +37,15 @@ func Load(t interface{}) error {
 				values[i] = strings.TrimSpace(v)
 			}
 
-			valueField.Set(reflect.ValueOf(values))
+			rs := reflect.MakeSlice(valueField.Type(), len(values), len(values))
+			for i, val := range values {
+				if valueField.Type().Elem().Kind() == reflect.String {
+					rs.Index(i).Set(reflect.ValueOf(val))
+					continue
+				}
+			}
+
+			valueField.Set(rs)
 		}
 	}
 

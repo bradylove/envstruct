@@ -55,132 +55,156 @@ var _ = Describe("Confer", func() {
 			}
 		})
 
-		JustBeforeEach(func() {
-			for k, v := range envVars {
-				os.Setenv(k, v)
-			}
+		Context("when load is successfull", func() {
+			JustBeforeEach(func() {
+				for k, v := range envVars {
+					os.Setenv(k, v)
+				}
 
-			loadError = confer.Load(&ts)
-		})
-
-		AfterEach(func() {
-			for k := range envVars {
-				os.Setenv(k, "")
-			}
-		})
-
-		It("does not return an error", func() {
-			Expect(loadError).ToNot(HaveOccurred())
-		})
-
-		Context("with strings", func() {
-			It("populates the string thing", func() {
-				Expect(ts.StringThing).To(Equal("stringy thingy"))
+				loadError = confer.Load(&ts)
 			})
-		})
 
-		Context("with bools", func() {
-			Context("with 'true'", func() {
-				It("is true", func() {
-					Expect(ts.BoolThing).To(BeTrue())
+			AfterEach(func() {
+				for k := range envVars {
+					os.Setenv(k, "")
+				}
+			})
+
+			It("does not return an error", func() {
+				Expect(loadError).ToNot(HaveOccurred())
+			})
+
+			Context("with strings", func() {
+				It("populates the string thing", func() {
+					Expect(ts.StringThing).To(Equal("stringy thingy"))
 				})
 			})
 
-			Context("with 'false'", func() {
-				BeforeEach(func() {
-					envVars["BOOL_THING"] = "false"
+			Context("with bools", func() {
+				Context("with 'true'", func() {
+					It("is true", func() {
+						Expect(ts.BoolThing).To(BeTrue())
+					})
 				})
 
-				It("is true", func() {
-					Expect(ts.BoolThing).To(BeFalse())
-				})
-			})
-
-			Context("with '1'", func() {
-				BeforeEach(func() {
-					envVars["BOOL_THING"] = "1"
-				})
-
-				It("is true", func() {
-					Expect(ts.BoolThing).To(BeTrue())
-				})
-			})
-
-			Context("with '0'", func() {
-				BeforeEach(func() {
-					envVars["BOOL_THING"] = "0"
-				})
-
-				It("is false", func() {
-					Expect(ts.BoolThing).To(BeFalse())
-				})
-			})
-		})
-
-		Context("with ints", func() {
-			It("populates the int thing", func() {
-				Expect(ts.IntThing).To(Equal(100))
-			})
-
-			It("populates the int 8 thing", func() {
-				Expect(ts.Int8Thing).To(Equal(int8(20)))
-			})
-
-			It("populates the int 16 thing", func() {
-				Expect(ts.Int16Thing).To(Equal(int16(2000)))
-			})
-
-			It("populates the int 32 thing", func() {
-				Expect(ts.Int32Thing).To(Equal(int32(200000)))
-			})
-
-			It("populates the int 64 thing", func() {
-				Expect(ts.Int64Thing).To(Equal(int64(200000000)))
-			})
-		})
-
-		Context("with uints", func() {
-			It("populates the uint thing", func() {
-				Expect(ts.UintThing).To(Equal(uint(100)))
-			})
-
-			It("populates the uint 8 thing", func() {
-				Expect(ts.Uint8Thing).To(Equal(uint8(20)))
-			})
-
-			It("populates the uint 16 thing", func() {
-				Expect(ts.Uint16Thing).To(Equal(uint16(2000)))
-			})
-
-			It("populates the uint 32 thing", func() {
-				Expect(ts.Uint32Thing).To(Equal(uint32(200000)))
-			})
-
-			It("populates the uint 64 thing", func() {
-				Expect(ts.Uint64Thing).To(Equal(uint64(200000000)))
-			})
-		})
-
-		Context("with comma separated strings", func() {
-			Context("slice of strings", func() {
-				It("populates a slice of strings", func() {
-					Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
-				})
-
-				Context("with leading and trailing spaces", func() {
+				Context("with 'false'", func() {
 					BeforeEach(func() {
-						envVars["STRING_SLICE_THING"] = "one , two , three"
+						envVars["BOOL_THING"] = "false"
 					})
 
+					It("is true", func() {
+						Expect(ts.BoolThing).To(BeFalse())
+					})
+				})
+
+				Context("with '1'", func() {
+					BeforeEach(func() {
+						envVars["BOOL_THING"] = "1"
+					})
+
+					It("is true", func() {
+						Expect(ts.BoolThing).To(BeTrue())
+					})
+				})
+
+				Context("with '0'", func() {
+					BeforeEach(func() {
+						envVars["BOOL_THING"] = "0"
+					})
+
+					It("is false", func() {
+						Expect(ts.BoolThing).To(BeFalse())
+					})
+				})
+			})
+
+			Context("with ints", func() {
+				It("populates the int thing", func() {
+					Expect(ts.IntThing).To(Equal(100))
+				})
+
+				It("populates the int 8 thing", func() {
+					Expect(ts.Int8Thing).To(Equal(int8(20)))
+				})
+
+				It("populates the int 16 thing", func() {
+					Expect(ts.Int16Thing).To(Equal(int16(2000)))
+				})
+
+				It("populates the int 32 thing", func() {
+					Expect(ts.Int32Thing).To(Equal(int32(200000)))
+				})
+
+				It("populates the int 64 thing", func() {
+					Expect(ts.Int64Thing).To(Equal(int64(200000000)))
+				})
+			})
+
+			Context("with uints", func() {
+				It("populates the uint thing", func() {
+					Expect(ts.UintThing).To(Equal(uint(100)))
+				})
+
+				It("populates the uint 8 thing", func() {
+					Expect(ts.Uint8Thing).To(Equal(uint8(20)))
+				})
+
+				It("populates the uint 16 thing", func() {
+					Expect(ts.Uint16Thing).To(Equal(uint16(2000)))
+				})
+
+				It("populates the uint 32 thing", func() {
+					Expect(ts.Uint32Thing).To(Equal(uint32(200000)))
+				})
+
+				It("populates the uint 64 thing", func() {
+					Expect(ts.Uint64Thing).To(Equal(uint64(200000000)))
+				})
+			})
+
+			Context("with comma separated strings", func() {
+				Context("slice of strings", func() {
 					It("populates a slice of strings", func() {
 						Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
 					})
+
+					Context("with leading and trailing spaces", func() {
+						BeforeEach(func() {
+							envVars["STRING_SLICE_THING"] = "one , two , three"
+						})
+
+						It("populates a slice of strings", func() {
+							Expect(ts.StringSliceThing).To(Equal([]string{"one", "two", "three"}))
+						})
+					})
+				})
+
+				Context("slice of ints", func() {
+					It("populates a slice of ints", func() {
+						Expect(ts.IntSliceThing).To(Equal([]int{1, 2, 3}))
+					})
+				})
+			})
+		})
+
+		Context("when load is unsuccessfull", func() {
+			Context("with an invalid int", func() {
+				BeforeEach(func() {
+					envVars["INT_THING"] = "Hello!"
+				})
+
+				It("returns an error", func() {
+					Expect(confer.Load(&ts)).ToNot(Succeed())
 				})
 			})
 
-			Context("slice of ints", func() {
-				It("populates a slice of ints", func() {
-					Expect(ts.IntSliceThing).To(Equal([]int{1, 2, 3}))
+			Context("with an invalid uint", func() {
+				BeforeEach(func() {
+					envVars["UINT_THING"] = "Hello!"
+				})
+
+				It("returns an error", func() {
+					Expect(confer.Load(&ts)).ToNot(Succeed())
 				})
 			})
 		})

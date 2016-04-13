@@ -17,37 +17,46 @@ func Load(t interface{}) error {
 
 		envVal := os.Getenv(strings.ToUpper(tag.Get("env")))
 
-		switch valueField.Kind() {
-		case reflect.String:
-			valueField.SetString(envVal)
-		case reflect.Bool:
-			valueField.SetBool(envVal == "true" || envVal == "1")
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			n, err := strconv.ParseInt(envVal, 10, 64)
-			_ = err
-			valueField.SetInt(int64(n))
-		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-			n, err := strconv.ParseUint(envVal, 10, 64)
-			_ = err
-			valueField.SetUint(uint64(n))
-		case reflect.Slice:
-			values := strings.Split(envVal, ",")
-
-			for i, v := range values {
-				values[i] = strings.TrimSpace(v)
-			}
-
-			rs := reflect.MakeSlice(valueField.Type(), len(values), len(values))
-			for i, val := range values {
-				if valueField.Type().Elem().Kind() == reflect.String {
-					rs.Index(i).Set(reflect.ValueOf(val))
-					continue
-				}
-			}
-
-			valueField.Set(rs)
-		}
+		setField(valueField, envVal)
 	}
 
 	return nil
+}
+
+func setField(value reflect.Value, input string) error {
+	switch value.Kind() {
+	case reflect.String:
+		value.SetString(input)
+	case reflect.Bool:
+		value.SetBool(input == "true" || input == "1")
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		n, err := strconv.ParseInt(input, 10, 64)
+		_ = err
+		value.SetInt(int64(n))
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		n, err := strconv.ParseUint(input, 10, 64)
+		_ = err
+		value.SetUint(uint64(n))
+	case reflect.Slice:
+		inputs := extractSliceInputs(input)
+
+		rs := reflect.MakeSlice(value.Type(), len(inputs), len(inputs))
+		for i, val := range inputs {
+			setField(rs.Index(i), val)
+		}
+
+		value.Set(rs)
+	}
+
+	return nil
+}
+
+func extractSliceInputs(input string) []string {
+	inputs := strings.Split(input, ",")
+
+	for i, v := range inputs {
+		inputs[i] = strings.TrimSpace(v)
+	}
+
+	return inputs
 }

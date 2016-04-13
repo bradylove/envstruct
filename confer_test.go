@@ -25,7 +25,7 @@ type TestStruct struct {
 	Uint64Thing uint64 `env:"uint64_thing"`
 
 	StringSliceThing []string `env:"string_slice_thing"`
-	IntSliceThing    []int    `env:"string_slice_thing"`
+	IntSliceThing    []int    `env:"int_slice_thing"`
 }
 
 var _ = Describe("Confer", func() {

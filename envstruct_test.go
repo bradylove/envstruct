@@ -65,7 +65,7 @@ var _ = Describe("envstruct", func() {
 			}
 		})
 
-		Context("when load is successfull", func() {
+		Context("when load is successful", func() {
 			JustBeforeEach(func() {
 				loadError = envstruct.Load(&ts)
 			})

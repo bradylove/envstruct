@@ -1,4 +1,4 @@
-package confer_test
+package envstruct_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func TestConfer(t *testing.T) {
+func TestEnvstruct(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Confer Suite")
+	RunSpecs(t, "Envstruct Suite")
 }

@@ -1,4 +1,4 @@
-package confer
+package envstruct
 
 import (
 	"os"

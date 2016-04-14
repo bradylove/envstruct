@@ -1,7 +1,7 @@
-package confer_test
+package envstruct_test
 
 import (
-	"confer"
+	"envstruct"
 	"os"
 
 	. "github.com/onsi/ginkgo"
@@ -28,7 +28,7 @@ type TestStruct struct {
 	IntSliceThing    []int    `env:"int_slice_thing"`
 }
 
-var _ = Describe("Confer", func() {
+var _ = Describe("envstruct", func() {
 	Describe("Load()", func() {
 		var (
 			ts        TestStruct
@@ -61,7 +61,7 @@ var _ = Describe("Confer", func() {
 					os.Setenv(k, v)
 				}
 
-				loadError = confer.Load(&ts)
+				loadError = envstruct.Load(&ts)
 			})
 
 			AfterEach(func() {
@@ -194,7 +194,7 @@ var _ = Describe("Confer", func() {
 				})
 
 				It("returns an error", func() {
-					Expect(confer.Load(&ts)).ToNot(Succeed())
+					Expect(envstruct.Load(&ts)).ToNot(Succeed())
 				})
 			})
 
@@ -204,7 +204,7 @@ var _ = Describe("Confer", func() {
 				})
 
 				It("returns an error", func() {
-					Expect(confer.Load(&ts)).ToNot(Succeed())
+					Expect(envstruct.Load(&ts)).ToNot(Succeed())
 				})
 			})
 		})

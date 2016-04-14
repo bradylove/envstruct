@@ -10,6 +10,7 @@ import (
 )
 
 type TestStruct struct {
+	NonEnvThing   string
 	StringThing   string `env:"string_thing"`
 	RequiredThing string `env:"required_thing,required"`
 

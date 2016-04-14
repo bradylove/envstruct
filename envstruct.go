@@ -1,10 +1,16 @@
 package envstruct
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 	"strconv"
 	"strings"
+)
+
+const (
+	EnvVarIndex int = iota
+	RequiredIndex
 )
 
 func Load(t interface{}) error {
@@ -15,7 +21,18 @@ func Load(t interface{}) error {
 		typeField := val.Type().Field(i)
 		tag := typeField.Tag
 
-		envVal := os.Getenv(strings.ToUpper(tag.Get("env")))
+		tagProperties := extractSliceInputs(tag.Get("env"))
+		envVar := strings.ToUpper(tagProperties[EnvVarIndex])
+		envVal := os.Getenv(envVar)
+
+		var required bool
+		if len(tagProperties) >= 2 {
+			required = tagProperties[RequiredIndex] == "required"
+		}
+
+		if isInvalid(envVal, required) {
+			return fmt.Errorf("%s is required but was empty", envVar)
+		}
 
 		err := setField(valueField, envVal)
 		if err != nil {
@@ -69,4 +86,8 @@ func extractSliceInputs(input string) []string {
 	}
 
 	return inputs
+}
+
+func isInvalid(input string, required bool) bool {
+	return required && input == ""
 }

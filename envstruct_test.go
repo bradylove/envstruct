@@ -4,12 +4,14 @@ import (
 	"envstruct"
 	"os"
 
+	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
 
 type TestStruct struct {
-	StringThing string `env:"string_thing"`
+	StringThing   string `env:"string_thing"`
+	RequiredThing string `env:"required_thing,required"`
 
 	BoolThing bool `env:"bool_thing"`
 
@@ -39,6 +41,7 @@ var _ = Describe("envstruct", func() {
 		BeforeEach(func() {
 			envVars = map[string]string{
 				"STRING_THING":       "stringy thingy",
+				"REQUIRED_THING":     "im so required",
 				"BOOL_THING":         "true",
 				"INT_THING":          "100",
 				"INT8_THING":         "20",
@@ -55,12 +58,14 @@ var _ = Describe("envstruct", func() {
 			}
 		})
 
+		JustBeforeEach(func() {
+			for k, v := range envVars {
+				os.Setenv(k, v)
+			}
+		})
+
 		Context("when load is successfull", func() {
 			JustBeforeEach(func() {
-				for k, v := range envVars {
-					os.Setenv(k, v)
-				}
-
 				loadError = envstruct.Load(&ts)
 			})
 
@@ -188,6 +193,18 @@ var _ = Describe("envstruct", func() {
 		})
 
 		Context("when load is unsuccessfull", func() {
+			Context("when a required environment variable is not given", func() {
+				BeforeEach(func() {
+					envVars["REQUIRED_THING"] = ""
+				})
+
+				It("returns a validation error", func() {
+					loadError = envstruct.Load(&ts)
+
+					Expect(loadError).To(MatchError(fmt.Errorf("REQUIRED_THING is required but was empty")))
+				})
+			})
+
 			Context("with an invalid int", func() {
 				BeforeEach(func() {
 					envVars["INT_THING"] = "Hello!"

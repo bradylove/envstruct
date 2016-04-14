@@ -9,10 +9,12 @@ import (
 )
 
 const (
-	EnvVarIndex int = iota
-	RequiredIndex
+	indexEnvVar int = iota
+	indexRequired
 )
 
+// Load will use the `env` tags from a struct to populate the structs values and
+// perform validations.
 func Load(t interface{}) error {
 	val := reflect.ValueOf(t).Elem()
 
@@ -22,12 +24,12 @@ func Load(t interface{}) error {
 		tag := typeField.Tag
 
 		tagProperties := extractSliceInputs(tag.Get("env"))
-		envVar := strings.ToUpper(tagProperties[EnvVarIndex])
+		envVar := strings.ToUpper(tagProperties[indexEnvVar])
 		envVal := os.Getenv(envVar)
 
 		var required bool
 		if len(tagProperties) >= 2 {
-			required = tagProperties[RequiredIndex] == "required"
+			required = tagProperties[indexRequired] == "required"
 		}
 
 		if isInvalid(envVal, required) {

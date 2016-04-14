@@ -11,6 +11,7 @@ import (
 
 type TestStruct struct {
 	NonEnvThing   string
+	DefaultThing  string `env:"default_thing"`
 	StringThing   string `env:"string_thing"`
 	RequiredThing string `env:"required_thing,required"`
 
@@ -190,6 +191,15 @@ var _ = Describe("envstruct", func() {
 						Expect(ts.IntSliceThing).To(Equal([]int{1, 2, 3}))
 					})
 				})
+			})
+		})
+
+		Context("with defaults", func() {
+			It("honors default values if env var is empty", func() {
+				ts.DefaultThing = "Default Value"
+
+				Expect(envstruct.Load(&ts)).To(Succeed())
+				Expect(ts.DefaultThing).To(Equal("Default Value"))
 			})
 		})
 

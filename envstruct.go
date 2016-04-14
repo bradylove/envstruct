@@ -34,6 +34,10 @@ func Load(t interface{}) error {
 			return fmt.Errorf("%s is required but was empty", envVar)
 		}
 
+		if envVal == "" {
+			continue
+		}
+
 		err := setField(valueField, envVal)
 		if err != nil {
 			return err

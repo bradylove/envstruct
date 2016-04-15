@@ -1,7 +1,7 @@
 package envstruct_test
 
 import (
-	"envstruct"
+	"github.com/bradylove/envstruct"
 	"os"
 
 	"fmt"

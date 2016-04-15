@@ -8,6 +8,79 @@ variables.
 
 [https://godoc.org/github.com/bradylove/envstruct](https://godoc.org/github.com/bradylove/envstruct)
 
+## Usage
+
+Export some environment variables.
+
+```
+$ export HOST_IP="127.0.0.1"
+$ export HOST_PORT="443"
+```
+
+Write some code. In this example, `Ip` requires that the `HOST_IP` environment variable is set to non empty value and `Port` defaults to `80` if `HOST_PORT` is a non empty value.
+
+```
+package main
+
+import (
+    "fmt"
+    "github.com/bradylove/envstruct"
+)
+
+type HostInfo struct {
+    Ip   string `env:"host_ip,required"`
+    Port int    `env:"host_port"`
+}
+
+func main() {
+    hi := HostInfo{Port: 80}
+    err := envstruct.Load(&hi)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Printf("Host: %s, Port: %d\n", hi.Ip, hi.Port)
+}
+```
+
+Run your code and rejoice!
+
+```
+$ go run example/example.go
+Host: 127.0.0.1, Port: 443
+```
+
+## Supported Types
+
+- [x] string
+- [x] bool (`true` and `1` results in true value, anything else results in false value)
+- [x] int
+- [x] int8
+- [x] int16
+- [x] int32
+- [x] int64
+- [x] uint
+- [x] uint8
+- [x] uint16
+- [x] uint32
+- [x] uint64
+- [ ] float32
+- [ ] float64
+- [ ] complex64
+- [ ] complex128
+- [x] []slice (Slices of any other supported type. Environment variable should have coma separated values)
+- [ ] time.Duration
+
+## Running Tests
+
+Run tests using ginkgo.
+
+```
+$ go get github.com/onsi/ginkgo/ginkgo
+$ go get github.com/onsi/gomega
+$ ginkgo
+```
+
 ### MIT License
 
 Copyright (c) 2016 Brady Love <love.brady@gmail.com>

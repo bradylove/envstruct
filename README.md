@@ -1,5 +1,4 @@
 # envstruct
-========================
 
 envstruct is a simple library for populating values on structs from environment
 variables.

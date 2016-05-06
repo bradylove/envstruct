@@ -6,6 +6,7 @@ import (
 	"reflect"
 	"strconv"
 	"strings"
+	"time"
 )
 
 const (
@@ -50,6 +51,17 @@ func Load(t interface{}) error {
 }
 
 func setField(value reflect.Value, input string) error {
+	switch value.Type() {
+	case reflect.TypeOf(time.Second):
+		d, err := time.ParseDuration(input)
+		if err != nil {
+			return err
+		}
+
+		value.Set(reflect.ValueOf(d))
+		return nil
+	}
+
 	switch value.Kind() {
 	case reflect.String:
 		value.SetString(input)

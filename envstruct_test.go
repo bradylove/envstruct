@@ -7,6 +7,7 @@ import (
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"time"
 )
 
 type TestStruct struct {
@@ -30,6 +31,8 @@ type TestStruct struct {
 
 	StringSliceThing []string `env:"string_slice_thing"`
 	IntSliceThing    []int    `env:"int_slice_thing"`
+
+	DurationThing time.Duration `env:"duration_thing"`
 }
 
 var _ = Describe("envstruct", func() {
@@ -57,6 +60,7 @@ var _ = Describe("envstruct", func() {
 				"UINT64_THING":       "200000000",
 				"STRING_SLICE_THING": "one,two,three",
 				"INT_SLICE_THING":    "1,2,3",
+				"DURATION_THING":     "2s",
 			}
 		})
 
@@ -190,6 +194,12 @@ var _ = Describe("envstruct", func() {
 					It("populates a slice of ints", func() {
 						Expect(ts.IntSliceThing).To(Equal([]int{1, 2, 3}))
 					})
+				})
+			})
+
+			Context("with duration", func() {
+				It("parses the duration string", func() {
+					Expect(ts.DurationThing).To(Equal(2 * time.Second))
 				})
 			})
 		})

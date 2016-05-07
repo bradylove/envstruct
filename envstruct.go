@@ -54,52 +54,22 @@ func Load(t interface{}) error {
 func setField(value reflect.Value, input string) error {
 	switch value.Type() {
 	case reflect.TypeOf(time.Second):
-		d, err := time.ParseDuration(input)
-		if err != nil {
-			return err
-		}
-
-		value.Set(reflect.ValueOf(d))
-		return nil
+		return setDuration(value, input)
 	case reflect.TypeOf(&url.URL{}):
-		u, err := url.Parse(input)
-		if err != nil {
-			return err
-		}
-
-		value.Set(reflect.ValueOf(u))
-		return nil
+		return setURL(value, input)
 	}
 
 	switch value.Kind() {
 	case reflect.String:
-		value.SetString(input)
+		return setString(value, input)
 	case reflect.Bool:
-		value.SetBool(input == "true" || input == "1")
+		return setBool(value, input)
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		n, err := strconv.ParseInt(input, 10, 64)
-		if err != nil {
-			return err
-		}
-		value.SetInt(int64(n))
+		return setInt(value, input)
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		n, err := strconv.ParseUint(input, 10, 64)
-		if err != nil {
-			return err
-		}
-		value.SetUint(uint64(n))
+		return setUint(value, input)
 	case reflect.Slice:
-		inputs := extractSliceInputs(input)
-
-		rs := reflect.MakeSlice(value.Type(), len(inputs), len(inputs))
-		for i, val := range inputs {
-			err := setField(rs.Index(i), val)
-			if err != nil {
-				return err
-			}
-		}
-
-		value.Set(rs)
+		return setSlice(value, input)
 	}
 
 	return nil
@@ -117,4 +87,76 @@ func extractSliceInputs(input string) []string {
 
 func isInvalid(input string, required bool) bool {
 	return required && input == ""
+}
+
+func setDuration(value reflect.Value, input string) error {
+	d, err := time.ParseDuration(input)
+	if err != nil {
+		return err
+	}
+
+	value.Set(reflect.ValueOf(d))
+
+	return nil
+}
+
+func setURL(value reflect.Value, input string) error {
+	u, err := url.Parse(input)
+	if err != nil {
+		return err
+	}
+
+	value.Set(reflect.ValueOf(u))
+
+	return nil
+}
+
+func setString(value reflect.Value, input string) error {
+	value.SetString(input)
+
+	return nil
+}
+
+func setBool(value reflect.Value, input string) error {
+	value.SetBool(input == "true" || input == "1")
+
+	return nil
+}
+
+func setInt(value reflect.Value, input string) error {
+	n, err := strconv.ParseInt(input, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	value.SetInt(int64(n))
+
+	return nil
+}
+
+func setUint(value reflect.Value, input string) error {
+	n, err := strconv.ParseUint(input, 10, 64)
+	if err != nil {
+		return err
+	}
+
+	value.SetUint(uint64(n))
+
+	return nil
+}
+
+func setSlice(value reflect.Value, input string) error {
+	inputs := extractSliceInputs(input)
+
+	rs := reflect.MakeSlice(value.Type(), len(inputs), len(inputs))
+	for i, val := range inputs {
+		err := setField(rs.Index(i), val)
+		if err != nil {
+			return err
+		}
+	}
+
+	value.Set(rs)
+
+	return nil
 }

@@ -2,6 +2,7 @@ package envstruct
 
 import (
 	"fmt"
+	"net/url"
 	"os"
 	"reflect"
 	"strconv"
@@ -59,6 +60,14 @@ func setField(value reflect.Value, input string) error {
 		}
 
 		value.Set(reflect.ValueOf(d))
+		return nil
+	case reflect.TypeOf(&url.URL{}):
+		u, err := url.Parse(input)
+		if err != nil {
+			return err
+		}
+
+		value.Set(reflect.ValueOf(u))
 		return nil
 	}
 

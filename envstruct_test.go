@@ -7,6 +7,7 @@ import (
 	"fmt"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"net/url"
 	"time"
 )
 
@@ -33,6 +34,7 @@ type TestStruct struct {
 	IntSliceThing    []int    `env:"int_slice_thing"`
 
 	DurationThing time.Duration `env:"duration_thing"`
+	URLThing      *url.URL      `env:"url_thing"`
 }
 
 var _ = Describe("envstruct", func() {
@@ -61,6 +63,7 @@ var _ = Describe("envstruct", func() {
 				"STRING_SLICE_THING": "one,two,three",
 				"INT_SLICE_THING":    "1,2,3",
 				"DURATION_THING":     "2s",
+				"URL_THING":          "http://github.com/some/path",
 			}
 		})
 
@@ -197,9 +200,15 @@ var _ = Describe("envstruct", func() {
 				})
 			})
 
-			Context("with duration", func() {
+			Context("with structs", func() {
 				It("parses the duration string", func() {
 					Expect(ts.DurationThing).To(Equal(2 * time.Second))
+				})
+
+				It("parses the url string", func() {
+					Expect(ts.URLThing.Scheme).To(Equal("http"))
+					Expect(ts.URLThing.Host).To(Equal("github.com"))
+					Expect(ts.URLThing.Path).To(Equal("/some/path"))
 				})
 			})
 		})

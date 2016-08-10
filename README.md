@@ -1,11 +1,9 @@
+[![GoDoc](https://godoc.org/github.com/bradylove/envstruct?status.png)](https://godoc.org/github.com/bradylove/envstruct)
+
 # envstruct
 
 envstruct is a simple library for populating values on structs from environment
 variables.
-
-## Documentation
-
-[https://godoc.org/github.com/bradylove/envstruct](https://godoc.org/github.com/bradylove/envstruct)
 
 ## Usage
 

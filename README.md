@@ -16,29 +16,30 @@ $ export HOST_IP="127.0.0.1"
 $ export HOST_PORT="443"
 ```
 
-Write some code. In this example, `Ip` requires that the `HOST_IP` environment variable is set to non empty value and `Port` defaults to `80` if `HOST_PORT` is a non empty value.
+Write some code. In this example, `Ip` requires that the `HOST_IP` environment variable is set to non empty value and
+`Port` defaults to `80` if `HOST_PORT` is an empty value. Then we use the `envstruct.WriteReport()` to print a
+table with a report of what fields are on the struct, the type, the environment variable where the value is read from,
+whether or not it is required, and the value.
 
 ```
 package main
 
-import (
-    "fmt"
-    "github.com/bradylove/envstruct"
-)
+import "github.com/bradylove/envstruct"
 
 type HostInfo struct {
-    Ip   string `env:"host_ip,required"`
-    Port int    `env:"host_port"`
+	Ip   string `env:"host_ip,required"`
+	Port int    `env:"host_port"`
 }
 
 func main() {
-    hi := HostInfo{Port: 80}
-    err := envstruct.Load(&hi)
-    if err != nil {
-        panic(err)
-    }
+	hi := HostInfo{Port: 80}
 
-    fmt.Printf("Host: %s, Port: %d\n", hi.Ip, hi.Port)
+	err := envstruct.Load(&hi)
+	if err != nil {
+		panic(err)
+	}
+
+	envstruct.WriteReport(&hi)
 }
 ```
 
@@ -46,7 +47,9 @@ Run your code and rejoice!
 
 ```
 $ go run example/example.go
-Host: 127.0.0.1, Port: 443
+FIELD NAME:  TYPE:   ENV:       REQUIRED:  VALUE:
+Ip           string  HOST_IP    true       127.0.0.1
+Port         int     HOST_PORT  false      80
 ```
 
 ## Supported Types

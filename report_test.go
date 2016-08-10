@@ -13,7 +13,7 @@ import (
 
 var _ = Describe("Report", func() {
 	var (
-		ts         TestStruct
+		ts         SmallTestStruct
 		outputText string
 	)
 
@@ -42,25 +42,11 @@ var _ = Describe("Report", func() {
 })
 
 const (
-	expectedReportOutput = `FIELD NAME:       TYPE:          ENV:                VALUE:
-NonEnvThing       string
-DefaultThing      string         DEFAULT_THING
-StringThing       string         STRING_THING        stringy thingy
-RequiredThing     string         REQUIRED_THING      im so required
-BoolThing         bool           BOOL_THING          true
-IntThing          int            INT_THING           100
-Int8Thing         int8           INT8_THING          20
-Int16Thing        int16          INT16_THING         2000
-Int32Thing        int32          INT32_THING         200000
-Int64Thing        int64          INT64_THING         200000000
-UintThing         uint           UINT_THING          100
-Uint8Thing        uint8          UINT8_THING         20
-Uint16Thing       uint16         UINT16_THING        2000
-Uint32Thing       uint32         UINT32_THING        200000
-Uint64Thing       uint64         UINT64_THING        200000000
-StringSliceThing  []string       STRING_SLICE_THING  [one two three]
-IntSliceThing     []int          INT_SLICE_THING     [1 2 3]
-DurationThing     time.Duration  DURATION_THING      2000000000
-URLThing          *url.URL       URL_THING           &{http  <nil> github.com /some/path   }
+	expectedReportOutput = `FIELD NAME:       TYPE:     ENV:                REQUIRED:  VALUE:
+StringThing       string    STRING_THING        false      stringy thingy
+BoolThing         bool      BOOL_THING          false      true
+IntThing          int       INT_THING           false      100
+URLThing          *url.URL  URL_THING           false      &{http  <nil> github.com /some/path   }
+StringSliceThing  []string  STRING_SLICE_THING  false      [one two three]
 `
 )

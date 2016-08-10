@@ -32,7 +32,7 @@ var (
 	}
 )
 
-type TestStruct struct {
+type LargeTestStruct struct {
 	NonEnvThing   string
 	DefaultThing  string `env:"default_thing"`
 	StringThing   string `env:"string_thing"`
@@ -56,6 +56,14 @@ type TestStruct struct {
 
 	DurationThing time.Duration `env:"duration_thing"`
 	URLThing      *url.URL      `env:"url_thing"`
+}
+
+type SmallTestStruct struct {
+	StringThing      string   `env:"string_thing"`
+	BoolThing        bool     `env:"bool_thing"`
+	IntThing         int      `env:"int_thing"`
+	URLThing         *url.URL `env:"url_thing"`
+	StringSliceThing []string `env:"string_slice_thing"`
 }
 
 func TestEnvstruct(t *testing.T) {

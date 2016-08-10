@@ -15,7 +15,7 @@ import (
 var _ = Describe("envstruct", func() {
 	Describe("Load()", func() {
 		var (
-			ts        TestStruct
+			ts LargeTestStruct
 			loadError error
 			envVars   map[string]string
 		)

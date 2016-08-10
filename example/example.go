@@ -3,8 +3,9 @@ package main
 import "github.com/bradylove/envstruct"
 
 type HostInfo struct {
-	Ip   string `env:"host_ip,required"`
-	Port int    `env:"host_port"`
+	Ip       string `env:"host_ip,required"`
+	Password string `env:"password,,noreport"`
+	Port     int    `env:"host_port"`
 }
 
 func main() {

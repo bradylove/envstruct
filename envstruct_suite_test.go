@@ -59,6 +59,7 @@ type LargeTestStruct struct {
 }
 
 type SmallTestStruct struct {
+	HiddenThing      string   `env:"hidden_thing,,noreport"`
 	StringThing      string   `env:"string_thing"`
 	BoolThing        bool     `env:"bool_thing"`
 	IntThing         int      `env:"int_thing"`

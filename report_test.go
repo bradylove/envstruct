@@ -43,6 +43,7 @@ var _ = Describe("Report", func() {
 
 const (
 	expectedReportOutput = `FIELD NAME:       TYPE:     ENV:                REQUIRED:  VALUE:
+HiddenThing       string    HIDDEN_THING        false      (OMITTED)
 StringThing       string    STRING_THING        false      stringy thingy
 BoolThing         bool      BOOL_THING          false      true
 IntThing          int       INT_THING           false      100

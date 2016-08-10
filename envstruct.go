@@ -13,6 +13,7 @@ import (
 const (
 	indexEnvVar int = iota
 	indexRequired
+	indexNoReport
 )
 
 // Load will use the `env` tags from a struct to populate the structs values and

@@ -14,12 +14,14 @@ Export some environment variables.
 ```
 $ export HOST_IP="127.0.0.1"
 $ export HOST_PORT="443"
+$ export PASSWORD="abc123"
 ```
 
 Write some code. In this example, `Ip` requires that the `HOST_IP` environment variable is set to non empty value and
 `Port` defaults to `80` if `HOST_PORT` is an empty value. Then we use the `envstruct.WriteReport()` to print a
 table with a report of what fields are on the struct, the type, the environment variable where the value is read from,
-whether or not it is required, and the value.
+whether or not it is required, and the value. If using when `envstruct.WriteReport()` you wish to omit a sensitive
+value you can add `noreport` to the struct tag as shown with `Password`
 
 ```
 package main
@@ -27,8 +29,9 @@ package main
 import "github.com/bradylove/envstruct"
 
 type HostInfo struct {
-	Ip   string `env:"host_ip,required"`
-	Port int    `env:"host_port"`
+	Ip       string `env:"host_ip,required"`
+	Password string `env:"password,noreport"`
+	Port     int    `env:"host_port"`
 }
 
 func main() {
@@ -49,6 +52,7 @@ Run your code and rejoice!
 $ go run example/example.go
 FIELD NAME:  TYPE:   ENV:       REQUIRED:  VALUE:
 Ip           string  HOST_IP    true       127.0.0.1
+Password     string  PASSWORD   false      (OMITTED)
 Port         int     HOST_PORT  false      80
 ```
 
@@ -71,7 +75,7 @@ Port         int     HOST_PORT  false      80
 - [ ] complex64
 - [ ] complex128
 - [x] []slice (Slices of any other supported type. Environment variable should have coma separated values)
-- [ ] time.Duration
+- [x] time.Duration
 
 ## Running Tests
 

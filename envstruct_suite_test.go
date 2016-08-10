@@ -36,7 +36,7 @@ type LargeTestStruct struct {
 	NonEnvThing   string
 	DefaultThing  string `env:"default_thing"`
 	StringThing   string `env:"string_thing"`
-	RequiredThing string `env:"required_thing,required"`
+	RequiredThing string `env:"required_thing,noreport,required"`
 
 	BoolThing bool `env:"bool_thing"`
 
@@ -59,7 +59,7 @@ type LargeTestStruct struct {
 }
 
 type SmallTestStruct struct {
-	HiddenThing      string   `env:"hidden_thing,,noreport"`
+	HiddenThing      string   `env:"hidden_thing,noreport"`
 	StringThing      string   `env:"string_thing"`
 	BoolThing        bool     `env:"bool_thing"`
 	IntThing         int      `env:"int_thing"`

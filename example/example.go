@@ -4,7 +4,7 @@ import "github.com/bradylove/envstruct"
 
 type HostInfo struct {
 	Ip       string `env:"host_ip,required"`
-	Password string `env:"password,,noreport"`
+	Password string `env:"password,noreport"`
 	Port     int    `env:"host_port"`
 }
 

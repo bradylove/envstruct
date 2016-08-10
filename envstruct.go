@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	indexEnvVar int = iota
-	indexRequired
-	indexNoReport
+	indexEnvVar = 0
+
+	tagRequired = "required"
+	tagNoReport = "noreport"
 )
 
 // Load will use the `env` tags from a struct to populate the structs values and
@@ -30,10 +31,7 @@ func Load(t interface{}) error {
 		envVar := strings.ToUpper(tagProperties[indexEnvVar])
 		envVal := os.Getenv(envVar)
 
-		var required bool
-		if len(tagProperties) >= 2 {
-			required = tagProperties[indexRequired] == "required"
-		}
+		required := tagPropertiesContains(tagProperties, tagRequired)
 
 		if isInvalid(envVal, required) {
 			return fmt.Errorf("%s is required but was empty", envVar)
@@ -50,6 +48,16 @@ func Load(t interface{}) error {
 	}
 
 	return nil
+}
+
+func tagPropertiesContains(properties []string, match string) bool {
+	for _, v := range properties {
+		if v == match {
+			return true
+		}
+	}
+
+	return false
 }
 
 func setField(value reflect.Value, input string) error {

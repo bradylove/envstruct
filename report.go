@@ -32,13 +32,10 @@ func WriteReport(t interface{}) error {
 		tagProperties := extractSliceInputs(tag.Get("env"))
 		envVar := strings.ToUpper(tagProperties[indexEnvVar])
 
-		var isRequired bool
-		if len(tagProperties) >= 2 {
-			isRequired = tagProperties[indexRequired] == "required"
-		}
+		isRequired := tagPropertiesContains(tagProperties, tagRequired)
 
 		var displayedValue interface{} = valueField
-		if len(tagProperties) >= 3 && tagProperties[indexNoReport] == "noreport" {
+		if tagPropertiesContains(tagProperties, tagNoReport) {
 			displayedValue = "(OMITTED)"
 		}
 

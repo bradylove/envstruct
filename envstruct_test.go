@@ -1,6 +1,7 @@
 package envstruct_test
 
 import (
+	"errors"
 	"os"
 
 	"github.com/bradylove/envstruct"
@@ -8,6 +9,7 @@ import (
 	"fmt"
 	"time"
 
+	. "github.com/apoydence/eachers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -15,12 +17,19 @@ import (
 var _ = Describe("envstruct", func() {
 	Describe("Load()", func() {
 		var (
-			ts LargeTestStruct
+			ts        LargeTestStruct
 			loadError error
 			envVars   map[string]string
 		)
 
 		BeforeEach(func() {
+			ts = LargeTestStruct{}
+			ts.UnmarshallerPointer = newMockUnmarshaller()
+			ts.UnmarshallerPointer.UnmarshalEnvOutput.Ret0 <- nil
+			um := newMockUnmarshaller()
+			ts.UnmarshallerValue = *um
+			ts.UnmarshallerValue.UnmarshalEnvOutput.Ret0 <- nil
+
 			envVars = make(map[string]string)
 			for k, v := range baseEnvVars {
 				envVars[k] = v
@@ -46,6 +55,20 @@ var _ = Describe("envstruct", func() {
 
 			It("does not return an error", func() {
 				Expect(loadError).ToNot(HaveOccurred())
+			})
+
+			Context("with unmarshallers", func() {
+				It("passes the value to the pointer field", func() {
+					Expect(ts.UnmarshallerPointer.UnmarshalEnvInput).To(BeCalled(
+						With("pointer"),
+					))
+				})
+
+				It("passes the value to the value field's address", func() {
+					Expect(ts.UnmarshallerValue.UnmarshalEnvInput).To(BeCalled(
+						With("value"),
+					))
+				})
 			})
 
 			Context("with strings", func() {
@@ -208,6 +231,28 @@ var _ = Describe("envstruct", func() {
 			Context("with an invalid uint", func() {
 				BeforeEach(func() {
 					envVars["UINT_THING"] = "Hello!"
+				})
+
+				It("returns an error", func() {
+					Expect(envstruct.Load(&ts)).ToNot(Succeed())
+				})
+			})
+
+			Context("with a failing unmarshaller pointer", func() {
+				BeforeEach(func() {
+					ts.UnmarshallerPointer.UnmarshalEnvOutput.Ret0 = make(chan error, 100)
+					ts.UnmarshallerPointer.UnmarshalEnvOutput.Ret0 <- errors.New("failed to unmarshal")
+				})
+
+				It("returns an error", func() {
+					Expect(envstruct.Load(&ts)).ToNot(Succeed())
+				})
+			})
+
+			Context("with a failing unmarshaller value", func() {
+				BeforeEach(func() {
+					ts.UnmarshallerValue.UnmarshalEnvOutput.Ret0 = make(chan error, 100)
+					ts.UnmarshallerValue.UnmarshalEnvOutput.Ret0 <- errors.New("failed to unmarshal")
 				})
 
 				It("returns an error", func() {

@@ -17,6 +17,11 @@ const (
 	tagNoReport = "noreport"
 )
 
+// Unmarshaller is a type which unmarshals itself from an environment variable.
+type Unmarshaller interface {
+	UnmarshalEnv(v string) error
+}
+
 // Load will use the `env` tags from a struct to populate the structs values and
 // perform validations.
 func Load(t interface{}) error {
@@ -60,7 +65,20 @@ func tagPropertiesContains(properties []string, match string) bool {
 	return false
 }
 
+func unmarshaller(v reflect.Value) (Unmarshaller, bool) {
+	if unmarshaller, ok := v.Interface().(Unmarshaller); ok {
+		return unmarshaller, ok
+	}
+	if v.CanAddr() {
+		return unmarshaller(v.Addr())
+	}
+	return nil, false
+}
+
 func setField(value reflect.Value, input string) error {
+	if unmarshaller, ok := unmarshaller(value); ok {
+		return unmarshaller.UnmarshalEnv(input)
+	}
 	switch value.Type() {
 	case reflect.TypeOf(time.Second):
 		return setDuration(value, input)

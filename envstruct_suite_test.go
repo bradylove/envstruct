@@ -1,3 +1,5 @@
+//go:generate hel
+
 package envstruct_test
 
 import (
@@ -12,23 +14,25 @@ import (
 
 var (
 	baseEnvVars = map[string]string{
-		"STRING_THING":       "stringy thingy",
-		"REQUIRED_THING":     "im so required",
-		"BOOL_THING":         "true",
-		"INT_THING":          "100",
-		"INT8_THING":         "20",
-		"INT16_THING":        "2000",
-		"INT32_THING":        "200000",
-		"INT64_THING":        "200000000",
-		"UINT_THING":         "100",
-		"UINT8_THING":        "20",
-		"UINT16_THING":       "2000",
-		"UINT32_THING":       "200000",
-		"UINT64_THING":       "200000000",
-		"STRING_SLICE_THING": "one,two,three",
-		"INT_SLICE_THING":    "1,2,3",
-		"DURATION_THING":     "2s",
-		"URL_THING":          "http://github.com/some/path",
+		"STRING_THING":         "stringy thingy",
+		"REQUIRED_THING":       "im so required",
+		"BOOL_THING":           "true",
+		"INT_THING":            "100",
+		"INT8_THING":           "20",
+		"INT16_THING":          "2000",
+		"INT32_THING":          "200000",
+		"INT64_THING":          "200000000",
+		"UINT_THING":           "100",
+		"UINT8_THING":          "20",
+		"UINT16_THING":         "2000",
+		"UINT32_THING":         "200000",
+		"UINT64_THING":         "200000000",
+		"STRING_SLICE_THING":   "one,two,three",
+		"INT_SLICE_THING":      "1,2,3",
+		"DURATION_THING":       "2s",
+		"URL_THING":            "http://github.com/some/path",
+		"UNMARSHALLER_POINTER": "pointer",
+		"UNMARSHALLER_VALUE":   "value",
 	}
 )
 
@@ -56,6 +60,9 @@ type LargeTestStruct struct {
 
 	DurationThing time.Duration `env:"duration_thing"`
 	URLThing      *url.URL      `env:"url_thing"`
+
+	UnmarshallerPointer *mockUnmarshaller `env:"unmarshaller_pointer"`
+	UnmarshallerValue   mockUnmarshaller  `env:"unmarshaller_value"`
 }
 
 type SmallTestStruct struct {

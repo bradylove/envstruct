@@ -33,45 +33,48 @@ var (
 		"URL_THING":            "http://github.com/some/path",
 		"UNMARSHALLER_POINTER": "pointer",
 		"UNMARSHALLER_VALUE":   "value",
+		"CaSe_SeNsItIvE_ThInG": "case sensitive",
 	}
 )
 
 type LargeTestStruct struct {
-	NonEnvThing   string
-	DefaultThing  string `env:"default_thing"`
-	StringThing   string `env:"string_thing"`
-	RequiredThing string `env:"required_thing,noreport,required"`
+	NonEnvThing        string
+	DefaultThing       string `env:"DEFAULT_THING"`
+	StringThing        string `env:"STRING_THING"`
+	RequiredThing      string `env:"REQUIRED_THING,noreport,required"`
+	CaseSensitiveThing string `env:"CaSe_SeNsItIvE_ThInG"`
 
-	BoolThing bool `env:"bool_thing"`
+	BoolThing bool `env:"BOOL_THING"`
 
-	IntThing    int    `env:"int_thing"`
-	Int8Thing   int8   `env:"int8_thing"`
-	Int16Thing  int16  `env:"int16_thing"`
-	Int32Thing  int32  `env:"int32_thing"`
-	Int64Thing  int64  `env:"int64_thing"`
-	UintThing   uint   `env:"uint_thing"`
-	Uint8Thing  uint8  `env:"uint8_thing"`
-	Uint16Thing uint16 `env:"uint16_thing"`
-	Uint32Thing uint32 `env:"uint32_thing"`
-	Uint64Thing uint64 `env:"uint64_thing"`
+	IntThing    int    `env:"INT_THING"`
+	Int8Thing   int8   `env:"INT8_THING"`
+	Int16Thing  int16  `env:"INT16_THING"`
+	Int32Thing  int32  `env:"INT32_THING"`
+	Int64Thing  int64  `env:"INT64_THING"`
+	UintThing   uint   `env:"UINT_THING"`
+	Uint8Thing  uint8  `env:"UINT8_THING"`
+	Uint16Thing uint16 `env:"UINT16_THING"`
+	Uint32Thing uint32 `env:"UINT32_THING"`
+	Uint64Thing uint64 `env:"UINT64_THING"`
 
-	StringSliceThing []string `env:"string_slice_thing"`
-	IntSliceThing    []int    `env:"int_slice_thing"`
+	StringSliceThing []string `env:"STRING_SLICE_THING"`
+	IntSliceThing    []int    `env:"INT_SLICE_THING"`
 
-	DurationThing time.Duration `env:"duration_thing"`
-	URLThing      *url.URL      `env:"url_thing"`
+	DurationThing time.Duration `env:"DURATION_THING"`
+	URLThing      *url.URL      `env:"URL_THING"`
 
-	UnmarshallerPointer *mockUnmarshaller `env:"unmarshaller_pointer"`
-	UnmarshallerValue   mockUnmarshaller  `env:"unmarshaller_value"`
+	UnmarshallerPointer *mockUnmarshaller `env:"UNMARSHALLER_POINTER"`
+	UnmarshallerValue   mockUnmarshaller  `env:"UNMARSHALLER_VALUE"`
 }
 
 type SmallTestStruct struct {
-	HiddenThing      string   `env:"hidden_thing,noreport"`
-	StringThing      string   `env:"string_thing"`
-	BoolThing        bool     `env:"bool_thing"`
-	IntThing         int      `env:"int_thing"`
-	URLThing         *url.URL `env:"url_thing"`
-	StringSliceThing []string `env:"string_slice_thing"`
+	HiddenThing        string   `env:"HIDDEN_THING,noreport"`
+	StringThing        string   `env:"STRING_THING"`
+	BoolThing          bool     `env:"BOOL_THING"`
+	IntThing           int      `env:"INT_THING"`
+	URLThing           *url.URL `env:"URL_THING"`
+	StringSliceThing   []string `env:"STRING_SLICE_THING"`
+	CaseSensitiveThing string   `env:"CaSe_SeNsItIvE_ThInG"`
 }
 
 func TestEnvstruct(t *testing.T) {

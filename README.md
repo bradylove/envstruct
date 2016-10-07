@@ -15,6 +15,10 @@ $ export HOST_PORT="443"
 $ export PASSWORD="abc123"
 ```
 
+*Note:* The environment variables are case
+sensitive. The casing of the set environment variable must match the casing in
+the struct tag.
+
 Write some code. In this example, `Ip` requires that the `HOST_IP` environment variable is set to non empty value and
 `Port` defaults to `80` if `HOST_PORT` is an empty value. Then we use the `envstruct.WriteReport()` to print a
 table with a report of what fields are on the struct, the type, the environment variable where the value is read from,
@@ -27,9 +31,9 @@ package main
 import "github.com/bradylove/envstruct"
 
 type HostInfo struct {
-	Ip       string `env:"host_ip,required"`
-	Password string `env:"password,noreport"`
-	Port     int    `env:"host_port"`
+	IP       string `env:"HOST_IP,required"`
+	Password string `env:"PASSWORD,noreport"`
+	Port     int    `env:"HOST_PORT"`
 }
 
 func main() {
@@ -80,6 +84,7 @@ Port         int     HOST_PORT  false      80
 Run tests using ginkgo.
 
 ```
+$ go get github.com/apoydence/eachers
 $ go get github.com/onsi/ginkgo/ginkgo
 $ go get github.com/onsi/gomega
 $ ginkgo

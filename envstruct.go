@@ -33,7 +33,7 @@ func Load(t interface{}) error {
 		tag := typeField.Tag
 
 		tagProperties := extractSliceInputs(tag.Get("env"))
-		envVar := strings.ToUpper(tagProperties[indexEnvVar])
+		envVar := tagProperties[indexEnvVar]
 		envVal := os.Getenv(envVar)
 
 		required := tagPropertiesContains(tagProperties, tagRequired)

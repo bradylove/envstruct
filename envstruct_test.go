@@ -77,6 +77,12 @@ var _ = Describe("envstruct", func() {
 				})
 			})
 
+			Describe("case sensitiveity", func() {
+				It("populates the case sensitive thing", func() {
+					Expect(ts.CaseSensitiveThing).To(Equal("case sensitive"))
+				})
+			})
+
 			Context("with bools", func() {
 				Context("with 'true'", func() {
 					It("is true", func() {

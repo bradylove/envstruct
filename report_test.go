@@ -42,12 +42,13 @@ var _ = Describe("Report", func() {
 })
 
 const (
-	expectedReportOutput = `FIELD NAME:       TYPE:     ENV:                REQUIRED:  VALUE:
-HiddenThing       string    HIDDEN_THING        false      (OMITTED)
-StringThing       string    STRING_THING        false      stringy thingy
-BoolThing         bool      BOOL_THING          false      true
-IntThing          int       INT_THING           false      100
-URLThing          *url.URL  URL_THING           false      ` + urlOutput + `
-StringSliceThing  []string  STRING_SLICE_THING  false      [one two three]
+	expectedReportOutput = `FIELD NAME:         TYPE:     ENV:                  REQUIRED:  VALUE:
+HiddenThing         string    HIDDEN_THING          false      (OMITTED)
+StringThing         string    STRING_THING          false      stringy thingy
+BoolThing           bool      BOOL_THING            false      true
+IntThing            int       INT_THING             false      100
+URLThing            *url.URL  URL_THING             false      &{http  <nil> github.com /some/path  false  }
+StringSliceThing    []string  STRING_SLICE_THING    false      [one two three]
+CaseSensitiveThing  string    CASE_SENSITIVE_THING  false      case sensitive
 `
 )

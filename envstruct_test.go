@@ -211,7 +211,7 @@ var _ = Describe("envstruct", func() {
 			})
 		})
 
-		Context("when load is unsuccessfull", func() {
+		Context("when load is unsuccessful", func() {
 			Context("when a required environment variable is not given", func() {
 				BeforeEach(func() {
 					envVars["REQUIRED_THING"] = ""

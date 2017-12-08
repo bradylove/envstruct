@@ -2,6 +2,8 @@
 
 # envstruct
 
+## Deprecated This package is no longer maintained and has been moved to [code.cloudfoundry.org/go-envstruct](https://code.cloudfoundry.org/go-envstruct)
+
 envstruct is a simple library for populating values on structs from environment
 variables.
 
